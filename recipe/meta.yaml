@@ -16,7 +16,7 @@ source:
     - patches/PR_6147.patch
 
 build:
-  number: 0
+  number: 1
   entry_points:
     - pycc = numba.pycc:main
     - numba = numba.misc.numba_entry:main
