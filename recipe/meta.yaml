@@ -41,7 +41,7 @@ requirements:
     - setuptools
     - llvmlite 0.40.*
     - numpy
-    - tbb-devel 2021.6
+    - tbb-devel 2021.6.0
 
   run:
     - python
@@ -50,7 +50,7 @@ requirements:
     - importlib-metadata  # [py < 39]
 
   run_constrained:
-    - tbb  >=2021.6,<2022  # [not (armv6l or armv7l or aarch64 or linux32 or ppc64le)]
+    - tbb  >=2021.6.0,<2022  # [not (armv6l or armv7l or aarch64 or linux32 or ppc64le)]
     # avoid confusion from openblas bugs
     - libopenblas !=0.3.6  # [x86_64]
     - libopenblas >=0.3.18, !=0.3.20  # [arm64]
