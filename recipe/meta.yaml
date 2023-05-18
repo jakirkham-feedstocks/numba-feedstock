@@ -96,7 +96,6 @@ test:
     - numba.cuda.simulator.cudadrv
     - numba.cuda.tests
     - numba.cuda.tests.cudadrv
-    - numba.cuda.tests.cudadrv.data
     - numba.cuda.tests.cudapy
     - numba.cuda.tests.cudasim
     - numba.cuda.tests.nocuda
