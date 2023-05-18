@@ -14,7 +14,6 @@ source:
 build:
   number: 0
   entry_points:
-    - pycc = numba.pycc:main
     - numba = numba.misc.numba_entry:main
   script:
     - export CC="${CC} -pthread"  # [linux]
@@ -103,7 +102,6 @@ test:
     - numba.cuda.tests.nocuda
     - numba.experimental.jitclass
     - numba.np.ufunc
-    - numba.pycc
     - numba.scripts
     - numba.testing
     - numba.tests
