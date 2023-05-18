@@ -24,7 +24,7 @@ build:
     # tbb-devel triggers hard dependency on tbb, this is not the case.
     - tbb
   skip: true  # [python_impl == 'pypy']
-  skip: true  # [py<37]
+  skip: true  # [py<38]
 
 requirements:
   build:
@@ -40,20 +40,18 @@ requirements:
     - python
     - pip
     - setuptools
-    - llvmlite 0.39.*
+    - llvmlite 0.40.*
     - numpy
-    - tbb-devel 2021.*,<2021.6
+    - tbb-devel 2021.6
 
   run:
     - python
     - {{ pin_compatible('llvmlite', max_pin='x.x') }}
     - {{ pin_compatible('numpy') }}
     - importlib-metadata  # [py < 39]
-    # needed for pkg_resources
-    - setuptools
 
   run_constrained:
-    - tbb  2021.*  # [not (armv6l or armv7l or aarch64 or linux32 or ppc64le)]
+    - tbb  >=2021.6,<2022  # [not (armv6l or armv7l or aarch64 or linux32 or ppc64le)]
     # avoid confusion from openblas bugs
     - libopenblas !=0.3.6  # [x86_64]
     - libopenblas >=0.3.18, !=0.3.20  # [arm64]
@@ -64,7 +62,7 @@ requirements:
     # NumPy has a hard upper limit.
     # Also NumPy 1.22.0, 1.22.1, 1.22.2 are all broken for ufuncs
     # xref: https://github.com/numba/numba/issues/7756
-    - numpy >=1.18,!=1.22.0,!=1.22.1,!=1.22.2,<1.24
+    - numpy >=1.21,!=1.22.0,!=1.22.1,!=1.22.2,<1.25
     # CUDA Python 11.6 or later
     - cuda-python >=11.6
 
@@ -77,7 +75,7 @@ test:
     - scipy
     - ipython
     - setuptools
-    - tbb >=2021.0
+    - tbb >=2021.6
     - llvm-openmp              # [osx]
     # Need these for AOT. Do not init msvc as it may not be present
     - {{ compiler('c') }}      # [not win]
