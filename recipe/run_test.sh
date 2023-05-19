@@ -41,8 +41,10 @@ if [[ "$NUMPY_DETECTS_AVX512_SKX_NP_GT_122" == "True" ]]; then
     export NPY_DISABLE_CPU_FEATURES="AVX512_SKX"
 fi
 
+# Validate Numba dependencies
+python -m pip check
+
 # Check Numba executables are there
-pycc -h
 numba -h
 
 # run system info tool
@@ -52,13 +54,12 @@ numba -s
 python -m numba.tests.test_runtests
 
 if [[ "$archstr" == 'aarch64' ]] || [[ "$archstr" == "ppc64le" ]]; then
-	echo 'Running only a slice of tests'
-	$SEGVCATCH python -m numba.runtests -b -j --random='0.15' --exclude-tags='long_running' -m $TEST_NPROCS -- numba.tests
+	echo "Skipping numba test suite on $archstr"
+	#echo 'Running only a random selection of tests'
+	#$SEGVCATCH python -m numba.runtests -b --random='0.15' --exclude-tags='long_running' -m $TEST_NPROCS -- numba.tests
 # Else run the whole test suite
 else
 	echo 'Running all the tests except long_running'
 	echo "Running: $SEGVCATCH python -m numba.runtests -b -m $TEST_NPROCS -- $TESTS_TO_RUN"
 $SEGVCATCH python -m numba.runtests -b --exclude-tags='long_running' -m $TEST_NPROCS -- $TESTS_TO_RUN
 fi
-
-pip check

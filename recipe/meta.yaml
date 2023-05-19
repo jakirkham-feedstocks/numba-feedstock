@@ -1,20 +1,19 @@
 {% set name = "numba" %}
-{% set version = "0.56.4" %}
-{% set sha256 = "ab96b731fb9dee12b404b42b7c1fb82c119352648906a80526afa73658895b73" %}
+{% set version = "0.57.0" %}
+{% set sha256 = "2af6d81067a5bdc13960c6d2519dbabbf4d5d597cf75d640c5aeaefd48c6420a" %}
 
 package:
   name: numba
   version: {{ version }}
 
 source:
-  # url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  url: https://github.com/numba/{{ name }}/archive/{{ version }}.tar.gz
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  # url: https://github.com/numba/numba/archive/{{ version }}.tar.gz
   sha256: {{ sha256 }}
 
 build:
-  number: 1
+  number: 0
   entry_points:
-    - pycc = numba.pycc:main
     - numba = numba.misc.numba_entry:main
   script:
     - export CC="${CC} -pthread"  # [linux]
@@ -24,7 +23,7 @@ build:
     # tbb-devel triggers hard dependency on tbb, this is not the case.
     - tbb
   skip: true  # [python_impl == 'pypy']
-  skip: true  # [py<37]
+  skip: true  # [py<38]
 
 requirements:
   build:
@@ -40,31 +39,30 @@ requirements:
     - python
     - pip
     - setuptools
-    - llvmlite 0.39.*
+    - llvmlite 0.40.*
     - numpy
-    - tbb-devel 2021.*,<2021.6
+    - tbb-devel 2021.6.0
 
   run:
     - python
     - {{ pin_compatible('llvmlite', max_pin='x.x') }}
     - {{ pin_compatible('numpy') }}
     - importlib-metadata  # [py < 39]
-    # needed for pkg_resources
-    - setuptools
 
   run_constrained:
-    - tbb  2021.*  # [not (armv6l or armv7l or aarch64 or linux32 or ppc64le)]
+    - {{ pin_compatible('tbb') }}
     # avoid confusion from openblas bugs
-    - libopenblas !=0.3.6  # [x86_64]
+    - libopenblas !=0.3.6             # [x86_64]
     - libopenblas >=0.3.18, !=0.3.20  # [arm64]
     # CUDA 10.2 or later is required for CUDA support
+    - cuda-version >=10.2
     - cudatoolkit >=10.2
     # scipy 1.0 or later
     - scipy >=1.0
     # NumPy has a hard upper limit.
     # Also NumPy 1.22.0, 1.22.1, 1.22.2 are all broken for ufuncs
     # xref: https://github.com/numba/numba/issues/7756
-    - numpy >=1.18,!=1.22.0,!=1.22.1,!=1.22.2,<1.24
+    - numpy >=1.21,!=1.22.0,!=1.22.1,!=1.22.2,<1.25
     # CUDA Python 11.6 or later
     - cuda-python >=11.6
 
@@ -77,7 +75,7 @@ test:
     - scipy
     - ipython
     - setuptools
-    - tbb >=2021.0
+    - tbb
     - llvm-openmp              # [osx]
     # Need these for AOT. Do not init msvc as it may not be present
     - {{ compiler('c') }}      # [not win]
@@ -99,13 +97,11 @@ test:
     - numba.cuda.simulator.cudadrv
     - numba.cuda.tests
     - numba.cuda.tests.cudadrv
-    - numba.cuda.tests.cudadrv.data
     - numba.cuda.tests.cudapy
     - numba.cuda.tests.cudasim
     - numba.cuda.tests.nocuda
     - numba.experimental.jitclass
     - numba.np.ufunc
-    - numba.pycc
     - numba.scripts
     - numba.testing
     - numba.tests
