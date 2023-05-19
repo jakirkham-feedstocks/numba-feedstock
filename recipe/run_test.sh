@@ -41,6 +41,9 @@ if [[ "$NUMPY_DETECTS_AVX512_SKX_NP_GT_122" == "True" ]]; then
     export NPY_DISABLE_CPU_FEATURES="AVX512_SKX"
 fi
 
+# Validate Numba dependencies
+python -m pip check
+
 # Check Numba executables are there
 numba -h
 
@@ -59,5 +62,3 @@ else
 	echo "Running: $SEGVCATCH python -m numba.runtests -b -m $TEST_NPROCS -- $TESTS_TO_RUN"
 $SEGVCATCH python -m numba.runtests -b --exclude-tags='long_running' -m $TEST_NPROCS -- $TESTS_TO_RUN
 fi
-
-pip check
