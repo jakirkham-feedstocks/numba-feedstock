@@ -55,6 +55,7 @@ requirements:
     - libopenblas !=0.3.6             # [x86_64]
     - libopenblas >=0.3.18, !=0.3.20  # [arm64]
     # CUDA 10.2 or later is required for CUDA support
+    - cuda-version >=10.2
     - cudatoolkit >=10.2
     # scipy 1.0 or later
     - scipy >=1.0
