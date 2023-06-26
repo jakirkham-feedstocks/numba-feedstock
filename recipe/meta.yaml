@@ -1,6 +1,6 @@
 {% set name = "numba" %}
-{% set version = "0.57.0" %}
-{% set sha256 = "2af6d81067a5bdc13960c6d2519dbabbf4d5d597cf75d640c5aeaefd48c6420a" %}
+{% set version = "0.57.1" %}
+{% set sha256 = "33c0500170d213e66d90558ad6aca57d3e03e97bb11da82e6d87ab793648cb17" %}
 
 package:
   name: numba
@@ -12,7 +12,7 @@ source:
   sha256: {{ sha256 }}
 
 build:
-  number: 2
+  number: 0
   entry_points:
     - numba = numba.misc.numba_entry:main
   script:
