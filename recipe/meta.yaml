@@ -73,6 +73,9 @@ test:
     - jinja2
     - cffi
     - scipy
+    # At least NumPy 1.26.0 has an issue with arctanh on glibc<=2.17.
+    # ref: https://github.com/conda-forge/numba-feedstock/pull/128#issuecomment-1795031396
+    - numpy !=1.26.0  # [linux and x86_64]
     - ipython
     - setuptools
     - tbb
