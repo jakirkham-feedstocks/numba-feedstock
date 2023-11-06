@@ -58,8 +58,6 @@ if [[ "$archstr" == 'aarch64' ]] || [[ "$archstr" == "ppc64le" ]]; then
 	#echo 'Running only a random selection of tests'
 	#$SEGVCATCH python -m numba.runtests -b --random='0.15' --exclude-tags='long_running' -m $TEST_NPROCS -- numba.tests
 # Else run the whole test suite
-elif [[ "$unamestr" == 'Linux' ]]; then
-	echo "Skipping numba test suite on Linux temporarily"
 else
 	echo 'Running all the tests except long_running'
 	echo "Running: $SEGVCATCH python -m numba.runtests -b -m $TEST_NPROCS -- $TESTS_TO_RUN"
