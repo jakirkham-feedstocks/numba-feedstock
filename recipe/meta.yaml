@@ -33,8 +33,8 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     # llvm is needed for the headers
-    - llvm-openmp              # [osx]
-
+    - llvm-openmp  # [osx]
+    - libgomp      # [linux]
   host:
     - python
     - pip
@@ -50,7 +50,7 @@ requirements:
     - importlib-metadata  # [py < 39]
 
   run_constrained:
-    - {{ pin_compatible('tbb', max_pin=None) }}
+    - {{ pin_compatible('tbb-devel', max_pin=None) | replace('-devel', '') }}
     # avoid confusion from openblas bugs
     - libopenblas !=0.3.6             # [x86_64]
     - libopenblas >=0.3.18, !=0.3.20  # [arm64]
@@ -62,7 +62,7 @@ requirements:
     # NumPy has a hard upper limit.
     # Also NumPy 1.22.0, 1.22.1, 1.22.2 are all broken for ufuncs
     # xref: https://github.com/numba/numba/issues/7756
-    - numpy >=1.22,!=1.22.0,!=1.22.1,!=1.22.2,<1.27
+    - numpy >=1.22.3,<1.27
     # CUDA Python 11.6 or later
     - cuda-python >=11.6
 
@@ -76,7 +76,6 @@ test:
     - ipython
     - setuptools
     - tbb
-    - llvm-openmp              # [osx]
     # Need these for AOT. Do not init msvc as it may not be present
     - {{ compiler('c') }}      # [not win]
     - {{ compiler('cxx') }}    # [not win]
