@@ -22,8 +22,7 @@ build:
   ignore_run_exports:
     # tbb-devel triggers hard dependency on tbb, this is not the case.
     - tbb
-  skip: true  # [python_impl == 'pypy']
-  skip: true  # [py<38]
+  skip: true  # [py<38 or (python_impl == 'pypy')]
 
 requirements:
   build:
@@ -35,6 +34,7 @@ requirements:
     # llvm is needed for the headers
     - llvm-openmp  # [osx]
     - libgomp      # [linux]
+
   host:
     - python
     - pip
@@ -50,7 +50,7 @@ requirements:
     - importlib-metadata  # [py < 39]
 
   run_constrained:
-    - {{ pin_compatible('tbb-devel', max_pin=None) | replace('-devel', '') }}
+    - {{ pin_compatible('tbb', max_pin=None) }}
     # avoid confusion from openblas bugs
     - libopenblas !=0.3.6             # [x86_64]
     - libopenblas >=0.3.18, !=0.3.20  # [arm64]
@@ -74,14 +74,14 @@ test:
     - cffi
     - scipy
     # At least NumPy 1.26.0 has an issue with arctanh on glibc<=2.17.
-    # ref: https://github.com/conda-forge/numba-feedstock/pull/128#issuecomment-1795031396
+    # ref: https://github.com/numpy/numpy/issues/25087
     - numpy !=1.26.0  # [linux and x86_64]
     - ipython
     - setuptools
     - tbb
-    # Need these for AOT. Do not init msvc as it may not be present
-    - {{ compiler('c') }}      # [not win]
-    - {{ compiler('cxx') }}    # [not win]
+    # Need these for AOT.
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
 
   imports:
     - numba
