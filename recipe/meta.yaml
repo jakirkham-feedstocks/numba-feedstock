@@ -1,6 +1,6 @@
 {% set name = "numba" %}
-{% set version = "0.57.1" %}
-{% set sha256 = "33c0500170d213e66d90558ad6aca57d3e03e97bb11da82e6d87ab793648cb17" %}
+{% set version = "0.58.1" %}
+{% set sha256 = "487ded0633efccd9ca3a46364b40006dbdaca0f95e99b8b83e778d1195ebcbaa" %}
 
 package:
   name: numba
@@ -22,8 +22,7 @@ build:
   ignore_run_exports:
     # tbb-devel triggers hard dependency on tbb, this is not the case.
     - tbb
-  skip: true  # [python_impl == 'pypy']
-  skip: true  # [py<38]
+  skip: true  # [py<38 or (python_impl == 'pypy')]
 
 requirements:
   build:
@@ -33,13 +32,14 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     # llvm is needed for the headers
-    - llvm-openmp              # [osx]
+    - llvm-openmp  # [osx]
+    - libgomp      # [linux]
 
   host:
     - python
     - pip
     - setuptools
-    - llvmlite 0.40.*
+    - llvmlite 0.41.*
     - numpy
     - tbb-devel 2021.6.0
 
@@ -54,15 +54,15 @@ requirements:
     # avoid confusion from openblas bugs
     - libopenblas !=0.3.6             # [x86_64]
     - libopenblas >=0.3.18, !=0.3.20  # [arm64]
-    # CUDA 10.2 or later is required for CUDA support
-    - cuda-version >=10.2
-    - cudatoolkit >=10.2
+    # CUDA 11.2 or later is required for CUDA support
+    - cuda-version >=11.2
+    - cudatoolkit >=11.2
     # scipy 1.0 or later
     - scipy >=1.0
     # NumPy has a hard upper limit.
     # Also NumPy 1.22.0, 1.22.1, 1.22.2 are all broken for ufuncs
     # xref: https://github.com/numba/numba/issues/7756
-    - numpy >=1.21,!=1.22.0,!=1.22.1,!=1.22.2,<1.25
+    - numpy >=1.22.3,<1.27
     # CUDA Python 11.6 or later
     - cuda-python >=11.6
 
@@ -73,13 +73,15 @@ test:
     - jinja2
     - cffi
     - scipy
+    # At least NumPy 1.26.0 has an issue with arctanh on glibc<=2.17.
+    # ref: https://github.com/numpy/numpy/issues/25087
+    - numpy !=1.26.0  # [linux and x86_64]
     - ipython
     - setuptools
     - tbb
-    - llvm-openmp              # [osx]
-    # Need these for AOT. Do not init msvc as it may not be present
-    - {{ compiler('c') }}      # [not win]
-    - {{ compiler('cxx') }}    # [not win]
+    # Need these for AOT.
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
 
   imports:
     - numba
